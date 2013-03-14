@@ -43,8 +43,29 @@ function telephone_field_widget_info() {
     'telephone_default' => array(
       'label' => t('Telephone number'),
       'field types' => array('telephone'),
+      'settings' => array(
+        'placeholder' => '',
+      ),
     ),
   );
+}
+
+/**
+ * Implements hook_field_widget_settings_form().
+ */
+function telephone_field_widget_settings_form($field, $instance) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
+  $element['placeholder'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Placeholder'),
+    '#default_value' => $settings['placeholder'],
+    '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
+    '#access' => module_exists('elements') || module_exists('placeholder'),
+  );
+
+  return $element;
 }
 
 /**
