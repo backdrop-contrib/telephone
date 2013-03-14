@@ -72,9 +72,13 @@ function telephone_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function telephone_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  $widget = $instance['widget'];
+  $settings = $widget['settings'];
+
   $element += array(
     '#type' => module_exists('elements') ? 'telfield' : 'textfield',
     '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
+    '#placeholder' => $settings['placeholder'],
   );
   return array('value' => $element);
 }
