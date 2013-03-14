@@ -175,7 +175,6 @@ function telephone_field_formatter_view($entity_type, $entity, $field, $instance
       '#options' => array('external' => TRUE),
     );
   }
-  dpm($element);
 
   return $element;
 }
