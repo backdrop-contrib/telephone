@@ -3,3 +3,4 @@ description = "Defines a field type for telephone numbers."
 package = Core
 core = 7.x
 dependencies[] = field
+files[] = telephone.migrate.inc
