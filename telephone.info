@@ -1,6 +1,6 @@
 name = Telephone
 description = "Defines a field type for telephone numbers."
-package = Core
+package = Fields
 core = 7.x
 dependencies[] = field
 files[] = telephone.migrate.inc
