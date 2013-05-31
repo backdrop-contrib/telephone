@@ -103,7 +103,7 @@ function telephone_field_formatter_info() {
  */
 function telephone_field_formatter_info_alter(&$info) {
   if (isset($info['text_plain'])) {
-    $info['text_plain']['field_types'][] = 'telephone';
+    $info['text_plain']['field types'][] = 'telephone';
   }
 }
 
