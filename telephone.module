@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Defines a simple telephone number field type.
@@ -18,15 +17,6 @@ function telephone_field_info() {
       'property_type' => 'text',
     ),
   );
-}
-
-/**
- * Implements hook_field_info_alter().
- */
-function telephone_field_info_alter(&$info) {
-  if (module_exists('text')) {
-    $info['telephone']['default_formatter'] = 'text_plain';
-  }
 }
 
 /**
@@ -62,8 +52,7 @@ function telephone_field_widget_settings_form($field, $instance) {
     '#type' => 'textfield',
     '#title' => t('Placeholder'),
     '#default_value' => $settings['placeholder'],
-    '#description' => t('The placeholder is a short hint (a word or short phrase) intended to aid the user with data entry. A hint could be a sample value or a brief description of the expected format.'),
-    '#access' => module_exists('elements') || module_exists('placeholder'),
+    '#description' => t('Provide a sample value or a brief description of the expected format.'),
   );
 
   return $element;
@@ -77,7 +66,7 @@ function telephone_field_widget_form(&$form, &$form_state, $field, $instance, $l
   $settings = $widget['settings'];
 
   $element += array(
-    '#type' => module_exists('elements') ? 'telfield' : 'textfield',
+    '#type' => 'tel',
     '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
     '#placeholder' => $settings['placeholder'],
   );
@@ -173,6 +162,9 @@ function telephone_field_formatter_prepare_view($entity_type, $entities, $field,
       else {
         $item['title'] = $item['value'];
       }
+      if (!empty($settings['classes'])) {
+        $item['classes'] = $settings['classes'];
+      }
     }
   }
 }
@@ -185,18 +177,24 @@ function telephone_field_formatter_view($entity_type, $entity, $field, $instance
   $settings = $display['settings'];
 
   foreach ($items as $delta => $item) {
-    // Prepend 'tel:' to the telephone number.
-    $href = 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item['value']));
+    $clean = preg_replace('/\s+/', '', $item['value']);
 
-    // Render each element as link.
-    $element[$delta] = array(
-      '#type' => 'link',
-      '#title' => $item['title'],
-      '#href' => $href,
-      '#options' => array('external' => TRUE),
-    );
-    if (isset($item['classes'])) {
-      $element[$delta]['#attributes']['class'] = explode(' ', $item['classes']);
+    if ($display['type'] == 'telephone_clean') {
+      $element[$delta] = array('#markup' => $clean);
+    }
+    else {
+      // Prepend 'tel:' to the telephone number.
+      $href = 'tel:' . rawurlencode($clean);
+      // Render each element as link.
+      $element[$delta] = array(
+        '#type' => 'link',
+        '#title' => $item['title'],
+        '#href' => $href,
+        '#options' => array('external' => TRUE),
+      );
+      if (isset($item['classes'])) {
+        $element[$delta]['#attributes']['class'] = explode(' ', $item['classes']);
+      }
     }
   }
 
