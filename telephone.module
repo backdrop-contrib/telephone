@@ -97,6 +97,10 @@ function telephone_field_formatter_info() {
         'classes' => '',
       ),
     ),
+    'telephone_clean' => array(
+      'label' => t('Telephone number, no spaces.'),
+      'field types' => array('telephone'),
+    ),
   );
 }
 
@@ -115,18 +119,21 @@ function telephone_field_formatter_info_alter(&$info) {
 function telephone_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
+  $elements = array();
 
-  $elements['title'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Title to replace basic numeric telephone number display.'),
-    '#default_value' => $settings['title'],
-  );
-  $elements['classes'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Additional CSS Class'),
-    '#default_value' => $settings['title'],
-    '#description' => t('When output, this link will have this class attribute. Multiple classes should be separated by spaces.'),
-  );
+  if ($display['type'] == 'telephone_link') {
+    $elements['title'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Title to replace basic numeric telephone number display.'),
+      '#default_value' => $settings['title'],
+    );
+    $elements['classes'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Additional CSS Class'),
+      '#default_value' => $settings['title'],
+      '#description' => t('When output, this link will have this class attribute. Multiple classes should be separated by spaces.'),
+    );
+  }
 
   return $elements;
 }
@@ -139,11 +146,13 @@ function telephone_field_formatter_settings_summary($field, $instance, $view_mod
   $settings = $display['settings'];
   $summary = '';
 
-  if (!empty($settings['title'])) {
-    $summary = t('Link using text: @title', array('@title' => $settings['title']));
-  }
-  else {
-    $summary = t('Link using provided telephone number.');
+  if ($display['type'] == 'telephone_link') {
+    if (!empty($settings['title'])) {
+      $summary = t('Link using text: @title', array('@title' => $settings['title']));
+    }
+    else {
+      $summary = t('Link using provided telephone number.');
+    }
   }
 
   return $summary;
