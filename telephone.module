@@ -119,7 +119,7 @@ function telephone_field_formatter_settings_form($field, $instance, $view_mode, 
     $elements['classes'] = array(
       '#type' => 'textfield',
       '#title' => t('Additional CSS Class'),
-      '#default_value' => $settings['title'],
+      '#default_value' => $settings['classes'],
       '#description' => t('When output, this link will have this class attribute. Multiple classes should be separated by spaces.'),
     );
   }
