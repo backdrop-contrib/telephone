@@ -94,6 +94,7 @@ function telephone_field_formatter_info() {
       'field types' => array('telephone'),
       'settings' => array(
         'title' => '',
+        'classes' => '',
       ),
     ),
   );
@@ -119,6 +120,12 @@ function telephone_field_formatter_settings_form($field, $instance, $view_mode, 
     '#type' => 'textfield',
     '#title' => t('Title to replace basic numeric telephone number display.'),
     '#default_value' => $settings['title'],
+  );
+  $elements['classes'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Additional CSS Class'),
+    '#default_value' => $settings['title'],
+    '#description' => t('When output, this link will have this class attribute. Multiple classes should be separated by spaces.'),
   );
 
   return $elements;
@@ -179,6 +186,9 @@ function telephone_field_formatter_view($entity_type, $entity, $field, $instance
       '#href' => $href,
       '#options' => array('external' => TRUE),
     );
+    if (isset($item['classes'])) {
+      $element[$delta]['#attributes']['class'] = explode(' ', $item['classes']);
+    }
   }
 
   return $element;
